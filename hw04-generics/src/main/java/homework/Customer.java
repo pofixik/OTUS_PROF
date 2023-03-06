@@ -3,9 +3,9 @@ package homework;
 import java.util.Objects;
 
 public class Customer {
-    private final long id;
-    private  String name;
-    private Long scores;
+    private final  long id;
+    private   String name;
+    private  Long scores;
 
     //todo: 1. в этом классе надо исправить ошибки
 
@@ -14,6 +14,9 @@ public class Customer {
         this.name = name;
         this.scores = scores;
     }
+
+
+
 
     public long getId() {
         return id;
@@ -28,12 +31,17 @@ public class Customer {
     }
 
     public long getScores() {
-
         return scores;
     }
 
     public void setScores(long scores) {
         this.scores = scores;
+    }
+
+    public Customer(Customer customer)
+    {
+        this(customer.getId(), customer.getName(), customer.getScores());
+
     }
 
     @Override
@@ -56,6 +64,7 @@ public class Customer {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
+
         return result;
     }
 }

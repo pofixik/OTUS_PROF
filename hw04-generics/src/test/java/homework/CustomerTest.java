@@ -1,6 +1,5 @@
 package homework;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +33,6 @@ class CustomerTest {
         //given
         final long customerId = 1L;
         Customer customer = new Customer(customerId, "Ivan", 233);
-
         Map<Customer, String> map = new HashMap<>();
 
         String expectedData = "data";
@@ -51,6 +49,7 @@ class CustomerTest {
         long newScoreSecond = customer.getScores() + 20;
         customer.setScores(newScoreSecond);
         String factDataSecond = map.get(customer);
+
         //then
         assertThat(factDataSecond).isEqualTo(expectedData);
     }
@@ -85,6 +84,7 @@ class CustomerTest {
         //when
         Map.Entry<Customer, String> biggestScore = customerService.getNext(customer1);
         //then
+
         assertThat(biggestScore.getKey()).isEqualTo(customer3);
 
         //when
@@ -106,6 +106,7 @@ class CustomerTest {
         customerService.add(customer1, "Data1");
         customerService.add(new Customer(customer2.getId(), customer2.getName(), customer2.getScores()), "Data2");
         customerService.add(customer3, "Data3");
+
         //when
         Map.Entry<Customer, String> smallestScore = customerService.getSmallest();
         smallestScore.getKey().setName("Vasyl");
@@ -128,10 +129,14 @@ class CustomerTest {
 
         //when
         Customer customerLast = customerReverseOrder.take();
+        System.out.println("customerLast"+customerLast);
+
         //then
         assertThat(customerLast).usingRecursiveComparison().isEqualTo(customer3);
+        System.out.println("customer3");
         //when
         Customer customerMiddle = customerReverseOrder.take();
+        System.out.println("customerMiddle"+customerMiddle);
         //then
         assertThat(customerMiddle).usingRecursiveComparison().isEqualTo(customer2);
 
