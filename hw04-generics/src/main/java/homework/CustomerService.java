@@ -2,6 +2,7 @@ package homework;
 
 
 import javax.management.ImmutableDescriptor;
+import java.security.KeyStore;
 import java.util.*;
 
 public class CustomerService extends ImmutableDescriptor {
@@ -9,20 +10,20 @@ public class CustomerService extends ImmutableDescriptor {
     //todo: 3. надо реализовать методы этого класса
     //важно подобрать подходящую Map-у, посмотрите на редко используемые методы, они тут полезны
     private  TreeMap< Customer, String> list =  new TreeMap<>(Comparator.comparingInt(o -> (int) o.getScores()));
+    private  TreeMap< Customer, String> listsh =  new TreeMap<>(Comparator.comparingInt(o -> (int) o.getScores()));
 
-    private  TreeMap<Customer, String> shallowCopy =  new TreeMap<>(Comparator.comparingInt(o -> (int) o.getScores()));
+    private  Map.Entry<Customer, String> shallowCopy;
     public Map.Entry<Customer, String> getSmallest() {
-
-        for(Map.Entry<Customer, String> entry: list.entrySet()) {
-            for (Map.Entry<Customer, String> entry2 : shallowCopy.entrySet()) {
-
-                if (!entry.getKey().getName().equals(entry2.getKey().getName()) && entry.getKey().getId()==entry2.getKey().getId()){
-                    entry.getKey().setName(entry2.getKey().getName());
-                }
-            }
-        }
-
         Map.Entry<Customer, String> keyMin=list.ceilingEntry(list.firstKey());
+
+        if (!shallowCopy.getValue().equals("init")){
+        for(Map.Entry<Customer, String> entry: list.entrySet()) {
+            if (!entry.getKey().getName().equals(shallowCopy.getKey().getName())
+                    && entry.getKey().getId()==shallowCopy.getKey().getId()){
+                entry.getKey().setName(shallowCopy.getKey().getName());
+            }
+        }}
+
         long value,min;
         min=list.firstKey().getScores();
         for(Map.Entry<Customer, String> entry: list.entrySet())
@@ -33,14 +34,13 @@ public class CustomerService extends ImmutableDescriptor {
                 min = value;
                 keyMin = entry;
             }
+            shallowCopy= new AbstractMap.SimpleEntry<>(new Customer(keyMin.getKey()), keyMin.getValue());
         }
-
         return keyMin ;
     }
 
     public Map.Entry<Customer, String> getNext(Customer customer) {
-       list.putAll(shallowCopy);
-
+       list.putAll(listsh);
        return list.higherEntry(customer);
 
 
@@ -49,10 +49,9 @@ public class CustomerService extends ImmutableDescriptor {
     public void add(Customer customer, String data) {
 
         Customer initialCustomer= new Customer(customer);
-      //  list.put(initialCustomer,data);
-        list.put(new Customer(initialCustomer.getId(),initialCustomer.getName(),initialCustomer.getScores()), data);
-
-        shallowCopy.put(new Customer(customer),data);
+        list.put(initialCustomer,data);  list.put(new Customer(initialCustomer.getId(),initialCustomer.getName(),initialCustomer.getScores()), data);
+        listsh.put(new Customer(customer),data);
+        shallowCopy= new AbstractMap.SimpleEntry<>(null,"init");
 
     }
 
