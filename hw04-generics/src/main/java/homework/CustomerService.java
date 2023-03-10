@@ -10,7 +10,6 @@ public class CustomerService extends ImmutableDescriptor {
     //todo: 3. надо реализовать методы этого класса
     //важно подобрать подходящую Map-у, посмотрите на редко используемые методы, они тут полезны
     private  TreeMap< Customer, String> list =  new TreeMap<>(Comparator.comparingInt(o -> (int) o.getScores()));
-    private  TreeMap< Customer, String> listsh =  new TreeMap<>(Comparator.comparingInt(o -> (int) o.getScores()));
 
     private  Map.Entry<Customer, String> shallowCopy;
     public Map.Entry<Customer, String> getSmallest() {
@@ -40,17 +39,20 @@ public class CustomerService extends ImmutableDescriptor {
     }
 
     public Map.Entry<Customer, String> getNext(Customer customer) {
-       list.putAll(listsh);
+        for(Map.Entry<Customer, String> entry: list.entrySet()) {
+            if (entry.getKey().getId()==customer.getId()){
+                entry.getKey().setName(customer.getName());
+                entry.getKey().setScores(customer.getScores());
+            }
+        }
        return list.higherEntry(customer);
 
 
     }
 
     public void add(Customer customer, String data) {
-
         Customer initialCustomer= new Customer(customer);
-        list.put(initialCustomer,data);  list.put(new Customer(initialCustomer.getId(),initialCustomer.getName(),initialCustomer.getScores()), data);
-        listsh.put(new Customer(customer),data);
+        list.put(initialCustomer,data);
         shallowCopy= new AbstractMap.SimpleEntry<>(null,"init");
 
     }
